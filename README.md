@@ -1,6 +1,11 @@
 # MM-control-01
 MMU 3-axis stepper control
 
+## This Fork
+I modified load to Finda in motion.cpp so it will slow down sooner. I created a device called the Nipper that mounts to the selector and clips off of the filament end when it unloads. The recent updates to the MMU2 don't slow down soon enough.  My changes slow it down in time for the Nipper to do its job.  
+
+I used followed the Arduino method to modify and build the code.  I found this easy to do.  This flow worked for testing: power up printer, connect PC to MMU2, upload new code, unplug USB from PC, power off/on the printer then test.  I found it was important to power cycle the printer and MMU2 after uploading new code.
+
 ## Table of contents
 
 <!--ts-->
