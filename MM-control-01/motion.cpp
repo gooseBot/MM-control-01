@@ -115,12 +115,15 @@ void motion_disengage_idler()
 static void unload_to_finda()
 {
     int _speed = 2000;
-    const int _first_point = 1800;
+    //const int _first_point = 1800;
+    //move first point further back for the nipper 
+    const int _first_point = 2800;
 
     uint8_t _endstop_hit = 0;
 
     int _unloadSteps = BowdenLength::get() + 1100;
     const int _second_point = _unloadSteps - 1300;
+
 
     set_pulley_dir_pull();
 
@@ -129,7 +132,9 @@ static void unload_to_finda()
         do_pulley_step();
         _unloadSteps--;
 
-        if (_unloadSteps < 1400 && _speed < 6000) _speed = _speed + 3;
+        //if (_unloadSteps < 1400 && _speed < 6000) _speed = _speed + 3;
+        //slow down sooner for the nipper
+        if (_unloadSteps < (_first_point - 400) && _speed < 6000) _speed = _speed + 3;
         if (_unloadSteps < _first_point && _speed < 2500) _speed = _speed + 2;
         if (_unloadSteps < _second_point && _unloadSteps > 5000)
         {
@@ -139,7 +144,6 @@ static void unload_to_finda()
 
         delayMicroseconds(_speed);
         if (digitalRead(A1) == 0) _endstop_hit++;
-
     }
 }
 
