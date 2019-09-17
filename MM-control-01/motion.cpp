@@ -114,15 +114,10 @@ void motion_disengage_idler()
 //! @brief unload until FINDA senses end of the filament
 static void unload_to_finda()
 {
-//<<<<<<< HEAD
-    //int _speed = 2000;
-    //const int _first_point = 1800;
-    //move first point further back for the nipper 
+    //move first point further back for the nipper
+    //const int _first_point = 1800;	
     const int _first_point = 2800;
-//=======
     int delay = 2000; //microstep period in microseconds
-    //const int _first_point = 1800;
-//>>>>>>> 0f421397886cbd89093657c3e99ba52205284c37
 
     uint8_t _endstop_hit = 0;
 
@@ -137,16 +132,10 @@ static void unload_to_finda()
         do_pulley_step();
         _unloadSteps--;
 
-//<<<<<<< HEAD
-        //if (_unloadSteps < 1400 && _speed < 6000) _speed = _speed + 3;
-        //slow down sooner for the nipper
-        //if (_unloadSteps < (_first_point - 400) && _speed < 6000) _speed = _speed + 3;
-        //if (_unloadSteps < _first_point && _speed < 2500) _speed = _speed + 2;
-//=======
         //slow down sooner for the nipper, (_first_point - 400) vs 1400
+		//if (_unloadSteps < 1400 && _speed < 6000) _speed = _speed + 3;
         if (_unloadSteps < (_first_point - 400) && delay < 6000) delay += 3;
         if (_unloadSteps < _first_point && delay < 2500) delay += 2;
-//>>>>>>> 0f421397886cbd89093657c3e99ba52205284c37
         if (_unloadSteps < _second_point && _unloadSteps > 5000)
         {
             if (delay > 550) delay -= 1;
