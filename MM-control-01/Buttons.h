@@ -1,4 +1,4 @@
-// Buttons.h
+//! @file
 
 #ifndef _BUTTONS_h
 #define _BUTTONS_h
@@ -30,6 +30,7 @@ inline bool operator& (Btn a, Btn b)
 }
 
 bool setupMenu();
+Btn buttonPressed();
 Btn buttonClicked();
 
 #endif //_BUTTONS_h

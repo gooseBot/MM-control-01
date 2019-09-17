@@ -31,8 +31,8 @@ static void set_idler_dir_up();
 static void move(int _idler, int _selector, int _pulley);
 
 //! @brief Compute steps for selector needed to change filament
-//! @par current_filament Currently selected filament
-//! @par next_filament Filament to be selected
+//! @param current_filament Currently selected filament
+//! @param next_filament Filament to be selected
 //! @return selector steps
 int get_selector_steps(int current_filament, int next_filament)
 {
@@ -40,8 +40,8 @@ int get_selector_steps(int current_filament, int next_filament)
 }
 
 //! @brief Compute steps for idler needed to change filament
-//! @par current_filament Currently selected filament
-//! @par next_filament Filament to be selected
+//! @param current_filament Currently selected filament
+//! @param next_filament Filament to be selected
 //! @return idler steps
 int get_idler_steps(int current_filament, int next_filament)
 {
@@ -61,7 +61,7 @@ void do_pulley_step()
 
 //! @brief home idler
 //!
-//! @par toLastFilament
+//! @param toLastFilament
 //!   - true
 //! Move idler to previously loaded filament and disengage. Returns true.
 //! Does nothing if last filament used is not known and returns false.
@@ -114,21 +114,19 @@ bool home_selector()
     check_filament_not_present();
 
     tmc2130_init(HOMING_MODE);
-	 
-    move(0, -100,0); // move a bit in opposite direction
 
 	int _c = 0;
 	int _l = 2;
 
-	for (int c = 5; c > 0; c--)   // not really functional, let's do it rather more times to be sure
+	for (int c = 7; c > 0; c--)   // not really functional, let's do it rather more times to be sure
 	{
-		move(0, (c*20) * -1,0);
+		move(0, c * -18, 0);
 		delay(50);
 		for (int i = 0; i < 4000; i++)
 		{
 			move(0, 1,0);
-			uint16_t sg = tmc2130_read_sg(1);
-			if ((i > 16) && (sg < 6))	break;
+			uint16_t sg = tmc2130_read_sg(AX_SEL);
+			if ((i > 16) && (sg < 5))	break;
 
 			_c++;
 			if (i == 3000) { _l++; }
@@ -169,9 +167,9 @@ void move_proportional(int _idler, int _selector)
 
 	float _idler_step = _selector ? (float)_idler/(float)_selector : 1.0;
 	float _idler_pos = 0;
-	int _speed = 2500;
-	int _start = _selector - 250;
-	int _end = 250;
+	int delay = 2500; //microstep period in microseconds
+	const int _start = _selector - 250;
+	const int _end = 250;
 
 	while (_selector != 0 || _idler != 0 )
 	{
@@ -199,9 +197,9 @@ void move_proportional(int _idler, int _selector)
 
 		_idler_pos = _idler_pos + _idler_step;
 
-		delayMicroseconds(_speed);
-		if (_speed > 900 && _selector > _start) { _speed = _speed - 10; }
-		if (_speed < 2500 && _selector < _end) { _speed = _speed + 10; }
+		delayMicroseconds(delay);
+		if (delay > 900 && _selector > _start) { delay -= 10; }
+		if (delay < 2500 && _selector < _end) { delay += 10; }
 
 	}
 }
@@ -296,7 +294,7 @@ void set_pulley_dir_pull()
 
 //! @brief Park idler
 //! each filament selected has its park position, there is no park position for all filaments.
-//! @par _unpark
+//! @param _unpark
 //!  * false park
 //!  * true engage
 void park_idler(bool _unpark)

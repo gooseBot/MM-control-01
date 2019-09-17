@@ -172,7 +172,7 @@ void check_filament_not_present()
 {
     while (digitalRead(A1) == 1)
     {
-        while (Btn::right != buttonClicked())
+        while (Btn::right != buttonPressed())
         {
             if (digitalRead(A1) == 1)
             {
@@ -282,7 +282,7 @@ void setup()
 	shr16_set_led(0x000);
 
     // check if to goto the settings menu
-    if (buttonClicked() == Btn::middle)
+    if (buttonPressed() == Btn::middle)
     {
         state = S::Setup;
     }
@@ -330,11 +330,11 @@ void manual_extruder_selector()
 {
 	shr16_set_led(1 << 2 * (4 - active_extruder));
 
-	if ((Btn::left|Btn::right) & buttonClicked())
+	if ((Btn::left|Btn::right) & buttonPressed())
 	{
 		delay(500);
 
-		switch (buttonClicked())
+		switch (buttonPressed())
 		{
 		case Btn::right:
 			if (active_extruder < 5)
@@ -386,11 +386,11 @@ void loop()
         break;
     case S::Idle:
         manual_extruder_selector();
-        if(Btn::middle == buttonClicked() && active_extruder < 5)
+        if(Btn::middle == buttonPressed() && active_extruder < 5)
         {
             shr16_set_led(2 << 2 * (4 - active_extruder));
             delay(500);
-            if (Btn::middle == buttonClicked())
+            if (Btn::middle == buttonPressed())
             {
                 motion_set_idler_selector(active_extruder);
                 feed_filament();
@@ -431,7 +431,7 @@ void loop()
 }
 
 //! @brief receive and process commands from serial line
-//! @par inout FILE* struct connected to serial line to be used
+//! @param[in,out] inout struct connected to serial line to be used
 //!
 //! All commands have syntax in form of one letter integer number.
 void process_commands(FILE* inout)
@@ -529,7 +529,7 @@ void process_commands(FILE* inout)
 			else if (value == 3) //! S3 Read drive errors
 			    fprintf_P(inout, PSTR("%dok\n"), DriveError::get());
 		}
-		//! F<nr.> <type> filament type. <nr.> filament number, <type> 0, 1 or 2. Does nothing.
+		//! F<nr.> \<type\> filament type. <nr.> filament number, \<type\> 0, 1 or 2. Does nothing.
 		else if (sscanf_P(line, PSTR("F%d %d"), &value, &value0) > 0)
 		{
 			if (((value >= 0) && (value < EXTRUDERS)) &&

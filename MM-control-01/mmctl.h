@@ -1,6 +1,5 @@
-//! @file
-//! @brief High level multimaterial switcher control
-//!
+// @brief High level multimaterial switcher control
+
 #ifndef _MMCTL_H
 #define _MMCTL_H
 
@@ -11,8 +10,8 @@ extern bool isFilamentLoaded;
 
 void switch_extruder_withSensor(int new_extruder);
 void select_extruder(int new_extruder);
-void feed_filament();
-void load_filament_withSensor();
+bool feed_filament(bool timeout = false);
+void load_filament_withSensor(bool disengageIdler = true);
 void load_filament_inPrinter();
 void unload_filament_withSensor();
 void eject_filament(uint8_t filament);
